@@ -1,0 +1,70 @@
+.snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation-name: snow-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.snowflake::before {
+    content: "❄";
+}
+
+@keyframes snow-fall {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(110vh); }
+}
+
+.christmas-tree-multiple {
+    position: fixed;
+    bottom: 0px;
+    width: 50px;
+    animation: tree-bounce 3s infinite ease-in-out;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.christmas-santa-multiple {
+    position: fixed;
+    bottom: 0px;
+    width: 50px;
+    animation: santa-wiggle 2.5s infinite ease-in-out;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+@keyframes tree-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes santa-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(8deg); }
+}
+
+
+.christmas-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 600px;
+    opacity: 0.15;
+    z-index: 999;
+    pointer-events: none;
+}

@@ -1,0 +1,32 @@
+.mp-handover-table .ant-table-tbody > tr.ant-table-row-expanded > td {
+    background-color: #e6f7ff !important;
+}
+
+.mp-handover-table .ant-table-tbody > tr.ant-table-row-expanded > td.ant-table-cell-fix-left,
+.mp-handover-table .ant-table-tbody > tr.ant-table-row-expanded > td.ant-table-cell-fix-right {
+    background-color: #e6f7ff !important;
+}
+
+.mp-handover-table .ant-table-tbody > tr.ant-table-row-expanded:hover > td,
+.mp-handover-table .ant-table-tbody > tr.ant-table-row-expanded:hover > td.ant-table-cell-fix-left,
+.mp-handover-table .ant-table-tbody > tr.ant-table-row-expanded:hover > td.ant-table-cell-fix-right {
+    background-color: #bae0ff !important;
+}
+
+.mp-handover-table .ant-table-expanded-row > .ant-table-cell {
+    background-color: #ffffff !important;
+}
+.mp-handover-table .ant-table-tbody > tr.highlight-row > td {
+    background-color: #fffbe6 !important;
+}
+
+.mp-handover-table .ant-table-tbody > tr.highlight-row > td.ant-table-cell-fix-left,
+.mp-handover-table .ant-table-tbody > tr.highlight-row > td.ant-table-cell-fix-right {
+    background-color: #fffbe6 !important;
+}
+
+.mp-handover-table .ant-table-tbody > tr.highlight-row:hover > td,
+.mp-handover-table .ant-table-tbody > tr.highlight-row:hover > td.ant-table-cell-fix-left,
+.mp-handover-table .ant-table-tbody > tr.highlight-row:hover > td.ant-table-cell-fix-right {
+    background-color: #fff1b8 !important;
+}

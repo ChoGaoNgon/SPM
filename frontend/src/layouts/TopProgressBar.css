@@ -1,0 +1,22 @@
+.top-progress {
+    position: fixed;
+    height: 3px;
+    z-index: 101;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.top-progress--active {
+    opacity: 1;
+}
+
+.top-progress__bar {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #0ea5e9 0%, #22c55e 100%);
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+    transition: width 0.16s linear;
+}

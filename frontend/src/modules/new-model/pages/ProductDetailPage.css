@@ -1,0 +1,134 @@
+.product-detail-page {
+    padding: 0px;
+}
+
+@media (min-width: 768px) {
+    .product-detail-page {
+        padding: 0px;
+    }
+}
+
+@media (max-width: 767px) {
+    .product-detail-page {
+        padding: 8px;
+    }
+
+    .product-detail-page .ant-tabs-nav {
+        margin-bottom: 12px;
+    }
+
+    .product-detail-page .ant-tabs-tab {
+        padding: 8px 12px;
+        font-size: 13px;
+        margin: 0 4px 8px 0;
+    }
+
+    .product-detail-page .ant-tabs-nav-list {
+        flex-wrap: wrap;
+    }
+
+    .product-detail-page .ant-tabs-nav-operations {
+        display: none;
+    }
+
+    .product-detail-page .ant-tabs-tabpane {
+        padding: 8px 0;
+    }
+
+    .product-detail-page .ant-card {
+        margin-bottom: 12px;
+    }
+
+    .product-detail-page .ant-card-head-title {
+        font-size: 16px;
+    }
+
+    .product-detail-page .ant-row {
+        margin-left: -8px !important;
+        margin-right: -8px !important;
+    }
+
+    .product-detail-page .ant-col {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .product-detail-page .ant-space {
+        width: 100%;
+    }
+
+    .product-detail-page .ant-space-item {
+        width: 100%;
+    }
+
+    .product-detail-page .ant-btn {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .product-detail-page .ant-table {
+        font-size: 12px;
+    }
+
+    .product-detail-page .ant-table-thead > tr > th {
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+
+    .product-detail-page .ant-table-tbody > tr > td {
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+
+    .product-detail-page .ant-modal {
+        max-width: calc(100vw - 16px);
+        margin: 8px auto;
+    }
+
+    .product-detail-page .ant-modal-body {
+        padding: 16px;
+    }
+
+    .product-detail-page .ant-image {
+        max-width: 100%;
+    }
+
+    .product-detail-page .ant-typography {
+        font-size: 14px;
+    }
+
+    .product-detail-page h4.ant-typography {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 575px) {
+    .product-detail-page {
+        padding: 4px;
+    }
+
+    .product-detail-page .ant-tabs-tab {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+
+    .product-detail-page .ant-card-head-title {
+        font-size: 14px;
+    }
+
+    .product-detail-page .ant-table {
+        font-size: 11px;
+    }
+
+    .product-detail-page .ant-table-thead > tr > th,
+    .product-detail-page .ant-table-tbody > tr > td {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+
+    .product-detail-page .ant-btn {
+        font-size: 13px;
+        padding: 4px 12px;
+        height: auto;
+    }
+}

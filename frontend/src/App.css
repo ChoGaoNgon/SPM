@@ -1,0 +1,26 @@
+::-webkit-scrollbar:vertical {
+    width: 0;
+}
+::-webkit-scrollbar:horizontal {
+    height: 6px;
+}
+::-webkit-scrollbar-thumb:horizontal {
+    background: rgba(97, 97, 97, 0.3);
+    border-radius: 3px;
+}
+
+* {
+    scrollbar-width: thin;
+}
+
+.hide-scrollbar {
+    scrollbar-width: none; 
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none; 
+}
+
+.app-footer::after {
+    content: '©2025 HTMP Vietnam Joint Stock Company. Internal System Development by HQ. Dũng & PN. Minh.';
+}

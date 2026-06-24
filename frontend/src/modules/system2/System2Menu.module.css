@@ -1,0 +1,219 @@
+.pageRoot {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.pageRootDark {
+    background: #0f172a;
+}
+
+.contentLayer {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.menuButton {
+    height: auto;
+    min-height: 78px;
+    padding: 0 !important;
+    border-radius: 22px !important;
+    border: 1px solid #dbe4f0 !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.menuButton:hover,
+.menuButton:focus {
+    transform: translateY(-2px);
+    border-color: #c7d5e5 !important;
+    background: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.menuButtonDark {
+    border-color: #334155 !important;
+    background: rgba(15, 23, 42, 0.92) !important;
+    box-shadow: 0 2px 12px rgba(2, 6, 23, 0.3);
+}
+
+.menuButtonDark:hover,
+.menuButtonDark:focus {
+    border-color: #475569 !important;
+    background: rgba(30, 41, 59, 0.98) !important;
+    box-shadow: 0 12px 28px rgba(2, 6, 23, 0.4);
+}
+
+.menuButtonDisabled,
+.menuButtonDisabled:hover,
+.menuButtonDisabled:focus {
+    border-color: #e5e7eb !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+    transform: none;
+}
+
+.menuButtonDark.menuButtonDisabled,
+.menuButtonDark.menuButtonDisabled:hover,
+.menuButtonDark.menuButtonDisabled:focus {
+    border-color: #374151 !important;
+    background: rgba(30, 41, 59, 0.62) !important;
+}
+
+.buttonInner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 78px;
+    padding: 14px 18px;
+    text-align: left;
+    color: #111827;
+    font-weight: 700;
+}
+
+.menuButtonDark .buttonInner {
+    color: #e5edf7;
+}
+
+.menuButton svg {
+    flex-shrink: 0;
+}
+
+.iconBadge {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: var(--menu-icon-bg);
+    color: var(--menu-icon-color);
+    flex-shrink: 0;
+}
+
+.menuButtonDisabled .iconBadge {
+    opacity: 0.42;
+}
+
+.menuLabel {
+    font-size: 15px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    white-space: normal;
+}
+
+.menuGrid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.groupsContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+}
+
+.menuGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.groupHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.groupBadge {
+    width: 6px;
+    height: 28px;
+    border-radius: 3px;
+    background: var(--group-color, #3b82f6);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.groupTitle {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: -0.02em;
+}
+
+.groupHeaderDark .groupTitle {
+    color: #e5edf7;
+}
+
+.masonryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 1024px) {
+    .groupsContainer {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .masonryGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .groupsContainer {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .masonryGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .groupTitle {
+        font-size: 18px;
+    }
+}
+
+.emptyState {
+    color: #64748b;
+    font-size: 18px;
+}
+
+.emptyStateDark {
+    color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .menuButton {
+        min-height: 70px;
+        border-radius: 16px !important;
+    }
+
+    .buttonInner {
+        min-height: 70px;
+        padding: 12px 14px;
+        gap: 12px;
+    }
+
+    .iconBadge {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+    }
+
+    .menuLabel {
+        font-size: 14px;
+    }
+
+    .menuGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}

@@ -1,0 +1,181 @@
+spring:
+    application:
+        name: HTMP
+
+    devtools:
+        restart:
+            enabled: false
+
+    output:
+        ansi:
+            enabled: ALWAYS
+
+    datasource:
+        primary:
+            url: ${SPRING_DATASOURCE_URL}
+            username: ${SPRING_DATASOURCE_USERNAME}
+            password: ${SPRING_DATASOURCE_PASSWORD}
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            hikari:
+                maximum-pool-size: 50
+                minimum-idle: 20
+                connection-timeout: 30000
+                idle-timeout: 600000
+                max-lifetime: 1800000
+
+        secondary:
+            url: ${DB2_URL}
+            username: ${DB2_USERNAME}
+            password: ${DB2_PASSWORD}
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            hikari:
+                maximum-pool-size: 10
+                minimum-idle: 2
+                connection-timeout: 30000
+                idle-timeout: 600000
+                max-lifetime: 1800000
+
+        tertiary:
+            url: ${DB3_URL}
+            username: ${DB3_USERNAME}
+            password: ${DB3_PASSWORD}
+            driver-class-name: org.postgresql.Driver
+            hikari:
+                maximum-pool-size: 10
+                minimum-idle: 2
+                connection-timeout: 30000
+                idle-timeout: 600000
+                max-lifetime: 1800000
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: false
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                jdbc:
+                    batch_size: 1000
+                order_inserts: true
+                order_updates: true
+                batch_versioned_data: true
+
+    security:
+        user:
+            enabled: true
+            name: admin
+            password: admin
+            roles: ADMIN
+
+    servlet:
+        multipart:
+            enabled: true
+            resolve-lazily: true
+            max-file-size: 100MB
+            max-request-size: 100MB
+
+    mail:
+        senders:
+            default:
+                host: smtp.office365.com
+                port: 587
+                username: ${MAIL_DEFAULT}
+                password: ${MAIL_DEFAULT_PASSWORD}
+            # qc:
+            #   host: smtp.gmail.com
+            #   port: 587
+            #   username: qc@gmail.com
+            #   password: app_password_2
+            # kt:
+            #   host: smtp.gmail.com
+            #   port: 587
+            #   username: kt@gmail.com
+            #   password: app_password_3
+
+    data:
+        redis:
+            host: ${REDIS_HOST:localhost}
+            port: ${REDIS_PORT:6379}
+            password: ${REDIS_PASSWORD:}
+            timeout: 10s
+
+            repositories:
+                enabled: false
+
+            lettuce:
+                pool:
+                    enabled: true
+                    max-active: 50
+                    max-idle: 20
+                    min-idle: 5
+                    max-wait: 5s
+
+                shutdown-timeout: 5s
+
+    cache:
+        type: redis
+
+server:
+    port: ${SERVER_PORT:8080}
+    error:
+        include-message: always
+        include-binding-errors: always
+
+jwt:
+    secret: ${JWT_SECRET}
+    expirationMs: 1800000
+    # expirationMs: 120000
+    refreshExpirationMs: 604800000
+
+file:
+    upload-dir: ${FILE_UPLOAD_DIR}
+
+realtime:
+    server:
+        url: ${WEB_SOCKET_SERVER}
+
+windows:
+    server:
+        url: ${WINDOW_SERVER}
+
+app:
+    datasource:
+        secondary:
+            enabled: ${DB2_ENABLED:false}
+
+        tertiary:
+            enabled: ${DB3_ENABLED:false}
+    cors:
+        allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:3000,http://127.0.0.1:3000,https://apps.htmp.vn,https://*.htmp.vn}
+
+api:
+    hrm:
+        base-url: ${HRM_API:http://10.0.9.254:3000/api}
+    khsx:
+        url: ${KHSX_API:http://apps.htmp.vn:8000/api/method/ql_cong_viec_htmp.api.filekhsx.get_khsx_by_date}
+
+springdoc:
+    api-docs:
+        enabled: ${SWAGGER_ENABLED:false}
+    swagger-ui:
+        enabled: ${SWAGGER_ENABLED:false}
+
+logging:
+    level:
+        org.springframework.security: DEBUG
+        htmp.codien: DEBUG
+        de.codecentric.boot.admin: DEBUG
+        org.springframework.boot.actuate: DEBUG
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info,metrics,beans,env,loggers,threaddump,heapdump,mappings,configprops,conditions,caches
+    endpoint:
+        health:
+            show-details: always
+        env:
+            show-values: when_authorized
+    info:
+        env:
+            enabled: true

@@ -1,0 +1,27 @@
+.work-schedule .ant-table-cell {
+    padding: 0 !important;
+    text-align: center;
+}
+
+.work-schedule .custom-table .ant-table-cell {
+    padding: 0 !important;
+}
+
+.work-schedule .shift-cell {
+    padding: 0 !important;
+}
+
+.work-schedule .ant-select-selector {
+    padding: 0 !important;
+    text-align: center;
+    height: 100% !important;
+}
+
+.work-schedule .ant-select,
+.work-schedule .ant-select-selection-item {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

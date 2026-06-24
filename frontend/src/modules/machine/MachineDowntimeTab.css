@@ -1,0 +1,156 @@
+.machine-downtime-tab {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.machine-downtime-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.machine-downtime-toolbar__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.machine-downtime-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.machine-downtime-summary .ant-card {
+    height: 100%;
+}
+
+.machine-downtime-board {
+    overflow: hidden;
+}
+
+.machine-downtime-board__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.machine-downtime-board__scroll {
+    overflow-x: auto;
+}
+
+.machine-downtime-board__inner {
+    min-width: 980px;
+}
+
+.machine-downtime-axis {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 10px;
+}
+
+.machine-downtime-axis__timeline {
+    position: relative;
+    height: 26px;
+    border-bottom: 1px solid #dbeafe;
+}
+
+.machine-downtime-axis__marker {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #64748b;
+}
+
+.machine-downtime-axis__marker::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 10px;
+    margin: 4px auto 0;
+    background: #bfdbfe;
+}
+
+.machine-downtime-row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #f1f5f9;
+}
+
+.machine-downtime-row__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.machine-downtime-row__meta strong {
+    font-size: 14px;
+    color: #0f172a;
+}
+
+.machine-downtime-row__meta span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.machine-downtime-track {
+    position: relative;
+    height: 34px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+    box-shadow: inset 0 0 0 1px #dbeafe;
+    overflow: hidden;
+}
+
+.machine-downtime-track__hour {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(148, 163, 184, 0.16);
+}
+
+.machine-downtime-event {
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    border-radius: 999px;
+    min-width: 6px;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+}
+
+.machine-downtime-event--open {
+    background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0 8px, rgba(255, 255, 255, 0.04) 8px 16px);
+}
+
+.machine-downtime-empty {
+    padding: 24px 0 8px;
+}
+
+@media (max-width: 768px) {
+    .machine-downtime-toolbar {
+        align-items: stretch;
+    }
+
+    .machine-downtime-toolbar__controls {
+        width: 100%;
+    }
+
+    .machine-downtime-axis,
+    .machine-downtime-row {
+        grid-template-columns: 140px minmax(0, 1fr);
+        gap: 10px;
+    }
+}

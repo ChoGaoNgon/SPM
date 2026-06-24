@@ -1,0 +1,390 @@
+{
+  "code": "PRODUCT_IMPORT",
+  "sheetIndex": 0,
+  "headerRow": 5,
+  "technicalHeaderRow": 6,
+  "startRow": 8,
+  "columns": [
+    {
+      "key": "modelCode",
+      "headers": ["Mã model\nModel code"],
+      "technicalHeaders": ["modelCode"],
+      "required": true,
+      "type": "string"
+    },
+    {
+      "key": "customerName",
+      "headers": ["Tên khách hàng\nCustomer name"],
+      "technicalHeaders": ["customerName"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "productCode",
+      "headers": ["Mã sản phẩm\nPart no"],
+      "technicalHeaders": ["productCode"],
+      "required": true,
+      "type": "string"
+    },
+    {
+      "key": "productName",
+      "headers": ["Tên sản phẩm\nPart name"],
+      "technicalHeaders": ["productName"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "productType",
+      "headers": ["Loại sản phẩm\nProduct Type"],
+      "technicalHeaders": ["productType"],
+      "required": false,
+      "type": "enum"
+    },
+    {
+      "key": "productMarketType",
+      "headers": ["Thị trường\nMarket"],
+      "technicalHeaders": ["productMarketType"],
+      "required": false,
+      "type": "enum"
+    },
+    {
+      "key": "productLifecycleYear",
+      "headers": ["Số năm vòng đời\nProduct Lifetime (Years)"],
+      "technicalHeaders": ["productLifecycleYear"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "productMonthlyOutput",
+      "headers": ["Sản lượng hàng tháng\n Monthly Production Volume"],
+      "technicalHeaders": ["productMonthlyOutput"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "productMoq",
+      "headers": ["MOQ\nMinimum Order Quantity"],
+      "technicalHeaders": ["productMoq"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "productMdq",
+      "headers": ["MDQ\nMinimum Delivery Quantity"],
+      "technicalHeaders": ["productMdq"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "productInfoReceivedDate",
+      "headers": ["Ngày nhận thông tin\nInformation Received Date"],
+      "technicalHeaders": ["productInfoReceivedDate"],
+      "required": false,
+      "type": "date"
+    },
+    {
+      "key": "productMpTargetDate",
+      "headers": ["Ngày mục tiêu MP\nMP Target Date"],
+      "technicalHeaders": ["productMpTargetDate"],
+      "required": false,
+      "type": "date"
+    },
+    {
+      "key": "productMoldType",
+      "headers": ["Khuôn (Shikyu/Mochi)\nMold (Shikyu/Mochi)"],
+      "technicalHeaders": ["productMoldType"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "productMoldManufacturer",
+      "headers": ["Nhà máy làm khuôn\nMold Manufacturer"],
+      "technicalHeaders": ["productMoldManufacturer"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "productNotes",
+      "headers": ["Ghi chú\nNotes"],
+      "technicalHeaders": ["productNotes"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "customerMaterial.matType",
+      "headers": ["Loại vật liệu\nMaterial Type"],
+      "technicalHeaders": ["customerMaterial.matType"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "customerMaterial.matGrade",
+      "headers": ["Grade\nMaterial Grade"],
+      "technicalHeaders": ["customerMaterial.matGrade"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "customerMaterial.matColorCode",
+      "headers": ["Mã màu\nMaterial Color code"],
+      "technicalHeaders": ["customerMaterial.matColorCode"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "customerMaterial.matColorName",
+      "headers": ["Tên màu\nMaterial Color name"],
+      "technicalHeaders": ["customerMaterial.matColorName"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "customerMaterial.matMaker",
+      "headers": ["Nhà cung cấp\nSupplier"],
+      "technicalHeaders": ["customerMaterial.matMaker"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "customerMaterial.remark",
+      "headers": ["Ghi chú\nNotes"],
+      "technicalHeaders": ["customerMaterial.remark"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "quotationMaterial.matType",
+      "headers": ["Loại vật liệu\nMaterial Type"],
+      "technicalHeaders": ["quotationMaterial.matType"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "quotationMaterial.matGrade",
+      "headers": ["Grade\nMaterial Grade"],
+      "technicalHeaders": ["quotationMaterial.matGrade"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "quotationMaterial.matColorCode",
+      "headers": ["Mã màu\nMaterial Color code"],
+      "technicalHeaders": ["quotationMaterial.matColorCode"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "quotationMaterial.matColorName",
+      "headers": ["Tên màu\nMaterial Color name"],
+      "technicalHeaders": ["quotationMaterial.matColorName"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "quotationMaterial.matMaker",
+      "headers": ["Nhà cung cấp\nSupplier"],
+      "technicalHeaders": ["quotationMaterial.matMaker"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "quotationMaterial.matMoq",
+      "headers": ["MOQ NVL\nMaterial MOQ"],
+      "technicalHeaders": ["quotationMaterial.matMoq"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "quotationMaterial.recyclingRate",
+      "headers": ["Tỷ lệ tái chế\nRecycling Rate"],
+      "technicalHeaders": ["quotationMaterial.recyclingRate"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "quotationMaterial.remark",
+      "headers": ["Ghi chú\nNotes"],
+      "technicalHeaders": ["quotationMaterial.remark"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "insert.type",
+      "headers": ["Loại\nType"],
+      "technicalHeaders": ["insert.type"],
+      "required": true,
+      "type": "string"
+    },
+    {
+      "key": "insert.code",
+      "headers": ["Mã\nCode"],
+      "technicalHeaders": ["insert.code"],
+      "required": true,
+      "type": "string"
+    },
+    {
+      "key": "insert.name",
+      "headers": ["Tên\nName"],
+      "technicalHeaders": ["insert.name"],
+      "required": true,
+      "type": "string"
+    },
+    {
+      "key": "insert.quantity",
+      "headers": ["Số lượng\nQuantity"],
+      "technicalHeaders": ["insert.quantity"],
+      "required": true,
+      "type": "number"
+    },
+    {
+      "key": "insert.unit",
+      "headers": ["Đơn vị\nUnit"],
+      "technicalHeaders": ["insert.unit"],
+      "required": true,
+      "type": "string"
+    },
+    {
+      "key": "insert.supplier",
+      "headers": ["Nhà cung cấp\nSupplier"],
+      "technicalHeaders": ["insert.supplier"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "machine.gateType",
+      "headers": ["Loại gate\nGate type"],
+      "technicalHeaders": ["machine.gateType"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "machine.cavity",
+      "headers": ["Số Cavity\nNumber of Cavities"],
+      "technicalHeaders": ["machine.cavity"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.cycleTimeQuotation",
+      "headers": ["Chu kỳ (Báo giá)\nCycle Time (Quotation)"],
+      "technicalHeaders": ["machine.cycleTimeQuotation"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.cycleTimeTarget",
+      "headers": ["Chu kỳ (Mục tiêu)\nCycle Time (Target)"],
+      "technicalHeaders": ["machine.cycleTimeTarget"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.machineCapacityQuotation",
+      "headers": ["Công suất (Báo giá)\nOutput Capacity (Quotation)"],
+      "technicalHeaders": ["machine.machineCapacityQuotation"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.machineCapacityTarget",
+      "headers": ["Công suất (Mục tiêu)\nOutput Capacity (Target)"],
+      "technicalHeaders": ["machine.machineCapacityTarget"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.runnerWeightG",
+      "headers": ["Trọng lượng runner (g)\nRunner Weight (g)"],
+      "technicalHeaders": ["machine.runnerWeightG"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.productWeightG",
+      "headers": ["Trọng lượng sản phẩm (g)\nProduct Weight (g)"],
+      "technicalHeaders": ["machine.productWeightG"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "machine.remark",
+      "headers": ["Ghi chú\nNotes"],
+      "technicalHeaders": ["machine.remark"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "moldDepreciation.quantityPcs",
+      "headers": ["Số lượng (pcs)\nQuantity (pcs)"],
+      "technicalHeaders": ["moldDepreciation.quantityPcs"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "moldDepreciation.year",
+      "headers": ["Số năm khấu hao\nDepreciation Years"],
+      "technicalHeaders": ["moldDepreciation.year"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "moldDepreciation.remark",
+      "headers": ["Ghi chú\nNotes"],
+      "technicalHeaders": ["moldDepreciation.remark"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "packing.boxType",
+      "headers": ["Loại thùng\nBox Type"],
+      "technicalHeaders": ["packing.boxType"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "packing.coverType",
+      "headers": ["Loại cover\nCover Type"],
+      "technicalHeaders": ["packing.coverType"],
+      "required": false,
+      "type": "string"
+    },
+    {
+      "key": "packing.boxInvestQty",
+      "headers": ["Số lượng thùng đầu tư\nNumber of Boxes Invested"],
+      "technicalHeaders": ["packing.boxInvestQty"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "packing.isOneTimeBox",
+      "headers": [
+        "Thùng 1 lần? / Thùng xoay vòng?\nOne-way Box? / Returnable Box?"
+      ],
+      "technicalHeaders": ["packing.isOneTimeBox"],
+      "required": false,
+      "type": "boolean",
+      "trueValues": ["x", "X", "1", "true"]
+    },
+    {
+      "key": "packing.pcsPerCover",
+      "headers": ["PCS/Cover\nPCS per Cover"],
+      "technicalHeaders": ["packing.pcsPerCover"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "packing.coverPerBox",
+      "headers": ["Cover/Thùng\nCovers per Box"],
+      "technicalHeaders": ["packing.coverPerBox"],
+      "required": false,
+      "type": "number"
+    },
+    {
+      "key": "packing.remark",
+      "headers": ["Ghi chú\nNotes"],
+      "technicalHeaders": ["packing.remark"],
+      "required": false,
+      "type": "string"
+    }
+  ]
+}

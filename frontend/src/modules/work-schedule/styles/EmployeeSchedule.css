@@ -1,0 +1,62 @@
+.employee-schedule {
+    padding: 16px;
+}
+
+.my-work-schedule .custom-table .ant-table-cell,
+.employee-schedule .custom-table .ant-table-cell {
+    padding: 0 !important;
+}
+
+.schedule-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sunday {
+    background-color: #ffe6e6;
+}
+
+.saturday {
+    background-color: #fff2cc;
+}
+.shift-cell {
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 4px;
+    color: var(--text-color, #000);
+}
+
+.HCT1 { background:#66BB6A; --text-color:#000; }
+.HCT2 { background:#43A047; --text-color:#fff; }
+.HCT3 { background:#2E7D32; --text-color:#fff; }
+
+.C1 { background:#42A5F5; --text-color:#000; }
+.C2 { background:#1E88E5; --text-color:#fff; }
+.C3 { background:#0D47A1; --text-color:#fff; }
+
+.KO { background:#FF9800; --text-color:#000; }
+.KD { background:#F57C00; --text-color:#fff; }
+.KOINT { background:#FB8C00; --text-color:#000; }
+.KDINT { background:#EF6C00; --text-color:#fff; }
+
+.KO150 { background:#FF7043; --text-color:#000; }
+.KD150 { background:#E64A19; --text-color:#fff; }
+.KO200 { background:#FF5722; --text-color:#fff; }
+.KD200 { background:#D84315; --text-color:#fff; }
+
+.HC150 { background:#e5a8f0; --text-color:#000; }
+.HC200 { background:#d588ea; --text-color:#000; }
+
+.XL { background:#009688; --text-color:#fff; }
+.HCL { background:#00796B; --text-color:#fff; }
+.XL1 { background:#004D40; --text-color:#fff; }
+
+.P, .PL { background:#E91E63; --text-color:#fff; }
+.PLD { background:#C2185B; --text-color:#fff; }
+
+.NT { background:#00ff48; --text-color:#000; }
+.L { background:#F44336; --text-color:#fff; }
+.DLBT { background:#FFEB3B; --text-color:#000; }
+
+.NS { background:#4caf9d; --text-color:#000; }
+.NKL { background:#af874c; --text-color:#fff; }
