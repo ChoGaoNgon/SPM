@@ -1,6 +1,7 @@
 package htmp.codien.quanlycodien.modules.permission.service;
 
 import htmp.codien.quanlycodien.common.enums.Role;
+import htmp.codien.quanlycodien.common.exception.ResourceNotFoundException;
 import htmp.codien.quanlycodien.infrastructure.realtime.RealtimeService;
 import htmp.codien.quanlycodien.modules.employee.dto.EmployeeResponse;
 import htmp.codien.quanlycodien.modules.employee.entity.Employee;
@@ -34,7 +35,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public Set<String> getPermissionsForEmployee(Long employeeId) {
         Employee employee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nhân viên không tồn tại: " + employeeId));
         Role role = employee.getRole();
 
         Set<String> permissions = rolePermissionRepo.findByRoleName(role)
