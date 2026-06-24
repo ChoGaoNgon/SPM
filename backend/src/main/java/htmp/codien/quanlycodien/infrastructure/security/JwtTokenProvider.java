@@ -3,6 +3,7 @@ package htmp.codien.quanlycodien.infrastructure.security;
 import java.security.Key;
 import java.util.Date;
 
+import htmp.codien.quanlycodien.modules.employee.entity.Employee;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,19 +27,17 @@ public class JwtTokenProvider {
     @Value("${jwt.refreshExpirationMs:604800000}")
     private long jwtRefreshExpirationMs;
 
-    public String generateToken(String code, String role) {
-        return generateAccessToken(code, role);
-    }
 
-    public String generateAccessToken(String code, String role) {
+    public String generateAccessToken( Employee user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
         Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
         return Jwts.builder()
-                .setSubject(code)
-                .claim("role", role)
+                .setSubject(user.getCode())
+                .claim("role", user.getRole().toString())
+                .claim("uid", user.getId())
                 .claim(TOKEN_TYPE_CLAIM, ACCESS_TOKEN_TYPE)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)

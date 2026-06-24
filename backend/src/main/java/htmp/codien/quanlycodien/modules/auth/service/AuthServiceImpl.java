@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Mật khẩu không đúng");
         }
 
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getCode(), user.getRole().toString());
+        String accessToken = jwtTokenProvider.generateAccessToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getCode(), user.getRole().toString());
 
         Duration accessTokenTtl = Duration.ofMillis(jwtExpirationMs);
@@ -105,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
         Employee user = employeeRepository.findByCode(code)
                 .orElseThrow(() -> new UsernameNotFoundException("Mã nhân viên không tồn tại"));
 
-        String newAccessToken = jwtTokenProvider.generateAccessToken(user.getCode(), user.getRole().toString());
+        String newAccessToken = jwtTokenProvider.generateAccessToken(user);
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getCode(), user.getRole().toString());
 
         Duration accessTokenTtl = Duration.ofMillis(jwtExpirationMs);
