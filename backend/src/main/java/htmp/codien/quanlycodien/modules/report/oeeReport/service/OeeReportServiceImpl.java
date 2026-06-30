@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -953,6 +954,11 @@ public class OeeReportServiceImpl implements OeeReportService {
                                 && (item.getTg_xl() == null || item.getTg_xl().compareTo(BigDecimal.ZERO) == 0)
                                 || (LocalDate.of(1900, 1, 1).equals(item.getNgay_kt_setup())
                                                 && item.getTg_setup().compareTo(BigDecimal.ZERO) < 0));
+                // ĐăngNH thêm 30/6
+                list.removeIf((item -> item.getStt() != null
+                        && item.getStt() == 0
+                        && (item.getMa_day_chuyen() == null)
+                        || item.getMa_day_chuyen().trim().isEmpty()));
 
                 for (SetupReportDTO item : list) {
 
@@ -1288,23 +1294,33 @@ public class OeeReportServiceImpl implements OeeReportService {
 
                 OeeReportFilterRequest requestMESBKPhatSinh = buildProductionIssueRequest(date);
 
-                CompletableFuture<List<MachineOperationReportDTO>> machineFuture = CompletableFuture
-                                .supplyAsync(() -> getMESBCKQVHPLV(requestMESBCKQVHPLV), reportFetchExecutor);
-                CompletableFuture<List<NgReportDTO>> ngFuture = CompletableFuture
-                                .supplyAsync(() -> getMESBKDangKyNG(requestMESBKDangKyNG), reportFetchExecutor);
-                CompletableFuture<List<MoldChangeReportDTO>> moldFuture = CompletableFuture
-                                .supplyAsync(() -> getMESBKThayKhuon(requestMESBKThayKhuon), reportFetchExecutor);
-                CompletableFuture<List<SetupReportDTO>> setupFuture = CompletableFuture
-                                .supplyAsync(() -> getMESBKSetup(requestMESBKSetup), reportFetchExecutor);
-                CompletableFuture<List<ProductionIssueReportDTO>> phatSinhFuture = CompletableFuture
-                                .supplyAsync(() -> getMESBKPhatSinh(requestMESBKPhatSinh), reportFetchExecutor);
+                long exportStart = System.nanoTime();
+                log.info("[OEE-EXPORT] BAT DAU export cho ngay {}", date);
 
+                CompletableFuture<List<MachineOperationReportDTO>> machineFuture = CompletableFuture
+                                .supplyAsync(() -> timed("DB.mesbckqvhplv",
+                                                () -> getMESBCKQVHPLV(requestMESBCKQVHPLV)), reportFetchExecutor);
+                CompletableFuture<List<NgReportDTO>> ngFuture = CompletableFuture
+                                .supplyAsync(() -> timed("DB.mesbkdangkyng",
+                                                () -> getMESBKDangKyNG(requestMESBKDangKyNG)), reportFetchExecutor);
+                CompletableFuture<List<MoldChangeReportDTO>> moldFuture = CompletableFuture
+                                .supplyAsync(() -> timed("DB.mesbkthaykhuon",
+                                                () -> getMESBKThayKhuon(requestMESBKThayKhuon)), reportFetchExecutor);
+                CompletableFuture<List<SetupReportDTO>> setupFuture = CompletableFuture
+                                .supplyAsync(() -> timed("DB.mesbksetup",
+                                                () -> getMESBKSetup(requestMESBKSetup)), reportFetchExecutor);
+                CompletableFuture<List<ProductionIssueReportDTO>> phatSinhFuture = CompletableFuture
+                                .supplyAsync(() -> timed("DB.mesbkphatsinh",
+                                                () -> getMESBKPhatSinh(requestMESBKPhatSinh)), reportFetchExecutor);
+
+                long fetchStart = System.nanoTime();
                 CompletableFuture.allOf(
                                 machineFuture,
                                 ngFuture,
                                 moldFuture,
                                 setupFuture,
                                 phatSinhFuture).join();
+                logElapsed("PHASE fetch 5 DB song song", fetchStart);
 
                 List<MachineOperationReportDTO> machineOperationReportDTOs = joinFuture(machineFuture,
                                 GRID_MESBCKQVHPLV);
@@ -1313,23 +1329,57 @@ public class OeeReportServiceImpl implements OeeReportService {
                 List<SetupReportDTO> setupReportData = joinFuture(setupFuture, GRID_MESBK_SETUP);
                 List<ProductionIssueReportDTO> phatSinhReportData = joinFuture(phatSinhFuture, GRID_MESBK_PHAT_SINH);
 
+                log.info("[OEE-EXPORT] So dong: machine={}, ng={}, mold={}, setup={}, phatSinh={}",
+                                machineOperationReportDTOs.size(), ngReportData.size(), moldChangeReportData.size(),
+                                setupReportData.size(), phatSinhReportData.size());
+
+                long normalizeStart = System.nanoTime();
                 normalizeMachineOperationReport(machineOperationReportDTOs);
                 normalizeNgReport(ngReportData);
                 normalizeMoldChangeReport(moldChangeReportData);
                 normalizeMachineSetupReport(setupReportData);
                 normalizePhatSinhReportData(phatSinhReportData, date);
+                logElapsed("PHASE normalize", normalizeStart);
 
+                long openStart = System.nanoTime();
                 try (
                                 InputStream is = file.getInputStream();
                                 Workbook workbook = WorkbookFactory.create(is)) {
-                        processSheetNhapNG(workbook, ngReportData, machineOperationReportDTOs, date);
+                        logElapsed("PHASE mo template (WorkbookFactory.create)", openStart);
+
+                        long nhapNgStart = System.nanoTime();
+                        processSheetNhapNG(workbook, ngReportData, machineOperationReportDTOs, setupReportData, date);
+                        logElapsed("PHASE sheet Nhap NG", nhapNgStart);
+
+                        long kqsxStart = System.nanoTime();
                         processSheetKQSX(workbook, machineOperationReportDTOs, previousDate, date);
+                        logElapsed("PHASE sheet KQSX", kqsxStart);
+
+                        long dungMayStart = System.nanoTime();
                         processSheetDungMay(workbook, date, moldChangeReportData, setupReportData, phatSinhReportData,
                                         machineOperationReportDTOs);
+                        logElapsed("PHASE sheet Dung May", dungMayStart);
 
+                        long writeStart = System.nanoTime();
                         workbook.write(os);
+                        logElapsed("PHASE workbook.write", writeStart);
                 }
 
+                logElapsed("TONG export", exportStart);
+        }
+
+        private <T> T timed(String label, Supplier<T> task) {
+                long start = System.nanoTime();
+                try {
+                        return task.get();
+                } finally {
+                        logElapsed(label, start);
+                }
+        }
+
+        private void logElapsed(String label, long startNano) {
+                long ms = (System.nanoTime() - startNano) / 1_000_000;
+                log.info("[OEE-EXPORT][timing] {} = {} ms", label, ms);
         }
 
         private void processSheetDungMay(Workbook workbook, LocalDate date,
@@ -1348,25 +1398,31 @@ public class OeeReportServiceImpl implements OeeReportService {
         private void processSheetKQSX(Workbook workbook, List<MachineOperationReportDTO> machineOperationReportDTOs,
                         LocalDate previousDate, LocalDate date) {
                 CompletableFuture<List<KhsxItemDTO>> khsxTodayFuture = CompletableFuture
-                                .supplyAsync(() -> getKhsxByDate(date), reportFetchExecutor);
+                                .supplyAsync(() -> timed("API.KHSX today",
+                                                () -> getKhsxByDate(date)), reportFetchExecutor);
                 CompletableFuture<List<KhsxItemDTO>> khsxPreviousDayFuture = CompletableFuture
-                                .supplyAsync(() -> getKhsxByDate(previousDate), reportFetchExecutor);
+                                .supplyAsync(() -> timed("API.KHSX previous",
+                                                () -> getKhsxByDate(previousDate)), reportFetchExecutor);
                 CompletableFuture<Map<String, ProductCodeMapping>> productMappingFuture = CompletableFuture
-                                .supplyAsync(() -> productCodeMappingRepository.findAll()
+                                .supplyAsync(() -> timed("DB.productCodeMapping.findAll",
+                                                () -> productCodeMappingRepository.findAll()
                                                 .stream()
                                                 .filter(mapping -> mapping.getKhsxProductCode() != null
                                                                 && mapping.getMesProductCode() != null)
                                                 .collect(Collectors.toMap(
                                                                 ProductCodeMapping::getKhsxProductCode,
                                                                 Function.identity(),
-                                                                (a, b) -> a)),
+                                                                (a, b) -> a))),
                                                 reportFetchExecutor);
 
+                long kqsxFetchStart = System.nanoTime();
                 List<KhsxItemDTO> data = joinFuture(khsxTodayFuture, "KHSX_today");
                 List<KhsxItemDTO> previousDayData = joinFuture(khsxPreviousDayFuture, "KHSX_previous_day");
                 Map<String, ProductCodeMapping> productMappingMap = joinFuture(productMappingFuture,
                                 "product_code_mapping");
+                logElapsed("  KQSX fetch (KHSX x2 + mapping song song)", kqsxFetchStart);
 
+                long kqsxWriteStart = System.nanoTime();
                 Map<String, KhsxItemDTO> dataMap = buildMesProductKhsxMap(data, productMappingMap);
                 Map<String, KhsxItemDTO> previousDayDataMap = buildMesProductKhsxMap(previousDayData,
                                 productMappingMap);
@@ -1377,6 +1433,7 @@ public class OeeReportServiceImpl implements OeeReportService {
                                 dataMap,
                                 previousDayDataMap,
                                 WEEK_FIELDS);
+                logElapsed("  KQSX write sheet", kqsxWriteStart);
 
                 if (!result.getMissingKhsxCodes().isEmpty()) {
                         log.warn("Không tìm thấy mapping KHSX cho {} mã sản phẩm MES: {}",
@@ -1394,11 +1451,13 @@ public class OeeReportServiceImpl implements OeeReportService {
         }
 
         private void processSheetNhapNG(Workbook workbook, List<NgReportDTO> ngReportData,
-                        List<MachineOperationReportDTO> machineOperationReportDTOs, LocalDate date) {
+                        List<MachineOperationReportDTO> machineOperationReportDTOs,
+                        List<SetupReportDTO> setupReportData, LocalDate date) {
                 nhapNgSheetWriter.write(
                                 workbook,
                                 ngReportData,
                                 machineOperationReportDTOs,
+                                setupReportData,
                                 date,
                                 WEEK_FIELDS);
         }
