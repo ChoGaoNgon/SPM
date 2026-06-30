@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -50,7 +51,8 @@ class OeeDungMaySheetWriter {
         }
 
         SheetContext dungMayCtx = buildDungMayContext();
-        int rowIdxDungMay = findStartRow(sheetDungMay, "B");
+        int firstDataRow = findStartRow(sheetDungMay, "B");
+        int rowIdxDungMay = firstDataRow;
         Map<String, Row> baseRowMap = new HashMap<>();
 
         rowIdxDungMay = writeMoldChangeRows(
@@ -77,12 +79,15 @@ class OeeDungMaySheetWriter {
                 phatSinhReportData,
                 baseRowMap);
 
-        writeMachineDowntimeRows(
+        rowIdxDungMay = writeMachineDowntimeRows(
                 sheetDungMay,
                 dungMayCtx,
                 rowIdxDungMay,
                 date,
                 machineOperationReportData);
+
+        // Du lieu den tu nhieu nguon nen thu tu lon xon -> sap xep lai vung vua ghi theo C > B > D
+        sortDataRows(sheetDungMay, dungMayCtx, firstDataRow, rowIdxDungMay);
     }
 
     private SheetContext buildDungMayContext() {
@@ -213,7 +218,7 @@ class OeeDungMaySheetWriter {
         return rowIdx;
     }
 
-    private void writeMachineDowntimeRows(
+    private int writeMachineDowntimeRows(
             Sheet sheet,
             SheetContext ctx,
             int startRow,
@@ -343,6 +348,8 @@ class OeeDungMaySheetWriter {
                         lastItem.getProduct_code());
             }
         }
+
+        return rowIdx;
     }
 
     private void writeDowntimeRow(
@@ -398,6 +405,92 @@ class OeeDungMaySheetWriter {
             return;
         }
         noteCell.setCellValue(oldValue + "; " + appendText);
+    }
+
+    private void sortDataRows(Sheet sheet, SheetContext ctx, int firstRow, int endRow) {
+        if (endRow - firstRow <= 1) {
+            return;
+        }
+
+        String[] cols = { "B", "C", "D", "E", "F", "G", "I", "Q" };
+
+        List<Map<String, Object>> snapshots = new ArrayList<>(endRow - firstRow);
+        for (int r = firstRow; r < endRow; r++) {
+            Row row = sheet.getRow(r);
+            Map<String, Object> snapshot = new HashMap<>();
+            for (String col : cols) {
+                Cell c = row == null ? null : row.getCell(ctx.col(col));
+                snapshot.put(col, readCellValue(c));
+            }
+            snapshots.add(snapshot);
+        }
+
+        snapshots.sort(Comparator
+                .<Map<String, Object>, Double>comparing(
+                        s -> numericKey(s.get("C")), Comparator.nullsLast(Double::compareTo))
+                .thenComparing(
+                        s -> dateKey(s.get("B")), Comparator.nullsLast(Double::compareTo))
+                .thenComparing(
+                        s -> stringKey(s.get("D")), Comparator.nullsLast(String::compareTo)));
+
+        for (int i = 0; i < snapshots.size(); i++) {
+            Row row = createOrGetRow(sheet, firstRow + i);
+            Map<String, Object> snapshot = snapshots.get(i);
+            for (String col : cols) {
+                writeCellValue(cell(row, ctx, col), snapshot.get(col));
+            }
+        }
+    }
+
+    private Object readCellValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        switch (cell.getCellType()) {
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getLocalDateTimeCellValue();
+                }
+                return cell.getNumericCellValue();
+            case STRING:
+                return cell.getStringCellValue();
+            case BOOLEAN:
+                return cell.getBooleanCellValue();
+            default:
+                return null;
+        }
+    }
+
+    private void writeCellValue(Cell cell, Object value) {
+        if (value == null) {
+            cell.setBlank();
+        } else if (value instanceof LocalDateTime dateTime) {
+            cell.setCellValue(dateTime);
+        } else if (value instanceof Double number) {
+            cell.setCellValue(number);
+        } else if (value instanceof Boolean bool) {
+            cell.setCellValue(bool);
+        } else {
+            cell.setCellValue(value.toString());
+        }
+    }
+
+    private Double numericKey(Object value) {
+        return value instanceof Number number ? number.doubleValue() : null;
+    }
+
+    private Double dateKey(Object value) {
+        if (value instanceof LocalDateTime dateTime) {
+            return (double) dateTime.toLocalDate().toEpochDay();
+        }
+        if (value instanceof Number number) {
+            return number.doubleValue();
+        }
+        return null;
+    }
+
+    private String stringKey(Object value) {
+        return value == null ? null : value.toString();
     }
 
     private int parseTrailingNumber(String code) {
