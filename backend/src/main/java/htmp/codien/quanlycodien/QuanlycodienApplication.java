@@ -17,6 +17,15 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 public class QuanlycodienApplication {
 
 	public static void main(String[] args) {
+		// POI/XMLBeans khi đọc file Excel lớn sẽ vượt giới hạn bảo mật XML (JAXP) mặc định của JDK,
+		// gây lỗi: "The accumulated size of entities ... exceeded the ... limit".
+		// Nới các giới hạn này về 0 (không giới hạn) NGAY trước khi app khởi động,
+		// để mọi XML parser tạo sau đó đều áp dụng.
+		System.setProperty("jdk.xml.totalEntitySizeLimit", "0");
+		System.setProperty("jdk.xml.entityExpansionLimit", "0");
+		System.setProperty("jdk.xml.maxGeneralEntitySizeLimit", "0");
+		System.setProperty("jdk.xml.maxParameterEntitySizeLimit", "0");
+
 		SpringApplication.run(QuanlycodienApplication.class, args);
 	}
 

@@ -36,7 +36,7 @@ class OeeDungMaySheetWriter {
     private static final int FIND_START_ROW_MIN_STEP = 100;
     private static final int FIND_START_ROW_MAX_STEP = 1000;
     private static final int FIND_START_ROW_TARGET_BUCKETS = 400;
-
+    private static final String UP_MACHINE = "Lên khuôn";
     void write(
             Workbook workbook,
             LocalDate date,
@@ -117,17 +117,23 @@ class OeeDungMaySheetWriter {
                 baseRowMap.put(key, row);
                 rowIdx++;
             } else {
-                Row baseRow = baseRowMap.get(key);
-                if (baseRow != null) {
+                BigDecimal minutes = item.getTg_xl() == null
+                        ? BigDecimal.ZERO
+                        : item.getTg_xl().divide(new BigDecimal(60), 2, RoundingMode.HALF_UP);
 
-                    double minutes = item.getTg_xl().doubleValue() / 60.0;
-
-                    Cell noteCell = cell(baseRow, ctx, "Q");
-
-                    appendToNoteCell(
-                            noteCell,
-                            item.getMa_loi() + ": " + String.format("%.2f", minutes));
-                }
+                Row row = createOrGetRow(sheet, rowIdx);
+                writeMainRow(
+                        row,
+                        ctx,
+                        date,
+                        item.getMa_day_chuyen(),
+                        item.getTg_bd_ghiloi() == null ? null : item.getTg_bd_ghiloi().toString(),
+                        item.getTg_kt_ghiloi() == null ? null : item.getTg_kt_ghiloi().toString(),
+                        item.getMa_loi(),
+                        minutes,
+                        item.getMa_vt(),
+                        UP_MACHINE);
+                rowIdx++;
             }
         }
 
