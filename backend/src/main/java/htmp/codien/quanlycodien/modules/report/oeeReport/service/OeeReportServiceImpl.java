@@ -952,41 +952,28 @@ public class OeeReportServiceImpl implements OeeReportService {
 
                 list.removeIf(item -> (item.getStt() != null && item.getStt() == 0)
                                 && (item.getTg_xl() == null || item.getTg_xl().compareTo(BigDecimal.ZERO) == 0)
+                                && (item.getMa_loi() == null || item.getMa_loi().trim().isEmpty())
                                 || (LocalDate.of(1900, 1, 1).equals(item.getNgay_kt_setup())
                                                 && item.getTg_setup().compareTo(BigDecimal.ZERO) < 0));
-                // ĐăngNH thêm 30/6
-                list.removeIf((item -> item.getStt() != null
-                        && item.getStt() == 0
-                        && (item.getMa_day_chuyen() == null)
-                        || item.getMa_day_chuyen().trim().isEmpty()));
-
                 for (SetupReportDTO item : list) {
 
-                        boolean needFill = item.getStt() != null
+                        boolean isChildRow = item.getStt() != null
                                         && item.getStt() == 0
                                         && (item.getMa_day_chuyen() == null
                                                         || item.getMa_day_chuyen().trim().isEmpty());
 
-                        if (needFill && previousValidRow != null) {
-
-
-                                item.setStt(previousValidRow.getStt());
-
-                                item.setMa_day_chuyen(previousValidRow.getMa_day_chuyen());
-                                item.setMa_sp(previousValidRow.getMa_sp());
-                                item.setTen_sp(previousValidRow.getTen_sp());
-                                item.setChu_ky_tt(previousValidRow.getChu_ky_tt());
-                                item.setNumber_shot(previousValidRow.getNumber_shot());
-                                item.setMa_day_chuyen(previousValidRow.getMa_day_chuyen());
-                                item.setMa_nv_th(previousValidRow.getMa_nv_th());
-                                item.setTen_nv_th(previousValidRow.getTen_nv_th());
-
-
-                                item.setNgay_bd_setup(item.getNgay_bd_ghiloi());
-                                item.setTg_bd_setup(item.getTg_bd_ghiloi());
-                                item.setNgay_kt_setup(item.getNgay_kt_ghiloi());
-                                item.setTg_kt_setup(item.getTg_kt_ghiloi());
-                                item.setTg_setup(item.getTg_xl());
+                        // Tong hop ghi chu loi cua dong con len ghi_chu_error cua dong cha
+                        if (isChildRow && previousValidRow != null) {
+                                String minutesText = (item.getTg_xl() == null
+                                                || item.getTg_xl().compareTo(BigDecimal.ZERO) == 0)
+                                                                ? "-"
+                                                                : item.getTg_xl().stripTrailingZeros().toPlainString();
+                                String errorNote = item.getMa_loi() + ": " + minutesText;
+                                String existingNote = previousValidRow.getGhi_chu_error();
+                                previousValidRow.setGhi_chu_error(
+                                                existingNote == null || existingNote.isBlank()
+                                                                ? errorNote
+                                                                : existingNote + "; " + errorNote);
                         }
 
                         if (item.getStt() != null && item.getStt() != 0) {
@@ -998,6 +985,13 @@ public class OeeReportServiceImpl implements OeeReportService {
                         }
 
                 }
+
+                // Da tong hop ghi chu xong -> xoa het dong con (khong fill nua)
+                list.removeIf(item -> item.getStt() != null
+                                && item.getStt() == 0
+                                && (item.getMa_day_chuyen() == null
+                                                || item.getMa_day_chuyen().trim().isEmpty()));
+
                 list.sort(Comparator.comparing(SetupReportDTO::getMa_day_chuyen));
         }
 
