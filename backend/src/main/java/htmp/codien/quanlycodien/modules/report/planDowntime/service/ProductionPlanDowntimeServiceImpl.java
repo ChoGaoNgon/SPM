@@ -26,7 +26,7 @@ import htmp.codien.quanlycodien.modules.report.planDowntime.dto.TimeRange;
 public class ProductionPlanDowntimeServiceImpl
         implements ProductionPlanDowntimeService {
 
-    static final String PLAN_SHEET_NAME = "KH_TODAY 1";
+    static final String PLAN_SHEET_NAME = "KH_TODAY";
     static final int START_ROW = 7;
 
     static final String[] REPORT_HEADERS = {
