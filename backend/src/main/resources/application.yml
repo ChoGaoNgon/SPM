@@ -122,7 +122,7 @@ server:
 
 jwt:
     secret: ${JWT_SECRET}
-    expirationMs: 1800000
+    expirationMs: 10800000
     # expirationMs: 120000
     refreshExpirationMs: 604800000
 
