@@ -56,6 +56,15 @@ public class ProductionPlanDowntimeServiceImpl
             }
 
             /*
+             * Sheet clone - Phút dừng = (24 - ΣY) * 60 (KHÔNG trừ ΣBO)
+             */
+            Sheet reportSheetNoMoldChange = outputWorkbook.createSheet("DMKH");
+            Row headerNoMoldChange = reportSheetNoMoldChange.createRow(0);
+            for (int i = 0; i < REPORT_HEADERS.length; i++) {
+                headerNoMoldChange.createCell(i).setCellValue(REPORT_HEADERS[i]);
+            }
+
+            /*
              * Sheet 2 - Missing Hours
              */
             Sheet missingHoursSheet = outputWorkbook.createSheet("Missing Hours");
@@ -70,6 +79,7 @@ public class ProductionPlanDowntimeServiceImpl
             Map<String, List<MachineDowntimeWrapper>> downtimeData = processDowntimeData(planSheet, ctx);
 
             int reportRowIndex = 1;
+            int reportRowIndexNoMoldChange = 1;
 
             for (Map.Entry<String, List<MachineDowntimeWrapper>> entry : downtimeData.entrySet()) {
                 String machineCode = entry.getKey();
@@ -98,10 +108,21 @@ public class ProductionPlanDowntimeServiceImpl
                 Row reportRow = reportSheet.createRow(reportRowIndex++);
                 setMachineCodeCellValue(reportRow, machineCode);
                 reportRow.createCell(1).setCellValue(totalDowntimeMinutes);
+
+                /*
+                 * Sheet clone: Phút dừng = (24 - ΣY) * 60, không trừ ΣBO
+                 */
+                double totalDowntimeMinutesNoMoldChange = Math
+                        .round(((24d - totalDurationHour) * 60d) * 100d) / 100d;
+
+                Row reportRowNoMoldChange = reportSheetNoMoldChange.createRow(reportRowIndexNoMoldChange++);
+                setMachineCodeCellValue(reportRowNoMoldChange, machineCode);
+                reportRowNoMoldChange.createCell(1).setCellValue(totalDowntimeMinutesNoMoldChange);
             }
 
             for (int i = 0; i < REPORT_HEADERS.length; i++) {
                 reportSheet.autoSizeColumn(i);
+                reportSheetNoMoldChange.autoSizeColumn(i);
             }
 
             getMachinesWithMissingHours(planSheet, missingHoursSheet, ctx);
