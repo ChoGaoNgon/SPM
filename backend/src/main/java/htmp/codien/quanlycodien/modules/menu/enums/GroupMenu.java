@@ -12,7 +12,8 @@ public enum GroupMenu {
     GENERAL_ADMINISTRATION("Hành chính tổng hợp", "#8B5CF6", "Briefcase"),
     SAFETY_OPERATIONS("An toàn và vận hành", "#EF4444", "ShieldCheck"),
     ACCOUNTING("Kế toán", "#64748B", "Calculator"),
-    IT_MANAGEMENT("Quản lý phòng IT", "#EC4899", "ComputerDesktop");
+    IT_MANAGEMENT("Quản lý phòng IT", "#EC4899", "ComputerDesktop"),
+    QC("Quản lý chất lượng", "#EC4899", "ClipboardCheck");
 
     private final String description;
     private final String color;
