@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPM – Hướng dẫn vận hành hệ thống (HTMP)</title>
+<style>
+  :root {
+    --bg: #0f172a; --panel: #1e293b; --text: #e2e8f0; --muted: #94a3b8;
+    --accent: #38bdf8; --accent2: #34d399; --border: #334155; --code-bg: #0b1220;
+    --warn-bg: #422006; --warn-border: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.65; font-size: 16px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+  header {
+    border-bottom: 2px solid var(--border); margin-bottom: 28px; padding-bottom: 16px;
+  }
+  h1 { font-size: 1.9rem; margin: 0 0 6px; color: #fff; }
+  h2 {
+    font-size: 1.35rem; margin: 40px 0 12px; color: var(--accent);
+    border-left: 4px solid var(--accent); padding-left: 12px;
+  }
+  h3 { font-size: 1.1rem; margin: 24px 0 8px; color: var(--accent2); }
+  p, li { color: var(--text); }
+  .muted { color: var(--muted); }
+  a { color: var(--accent); }
+  code {
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "Cascadia Code", Consolas, monospace; font-size: 0.9em; color: #f8fafc;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; overflow-x: auto; font-size: 0.88rem;
+  }
+  pre code { background: none; padding: 0; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.92rem;
+  }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--panel); color: #fff; }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .note {
+    background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 8px;
+    padding: 12px 16px; margin: 16px 0; color: #fde68a;
+  }
+  .badge {
+    display: inline-block; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 999px; padding: 2px 12px; font-size: 0.8rem; color: var(--muted); margin-right: 6px;
+  }
+  .toc { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; }
+  .toc a { text-decoration: none; }
+  .toc li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>SPM – Hệ thống Quản lý Cơ điện (HTMP)</h1>
+  <p class="muted">Hướng dẫn cài đặt, cấu hình biến môi trường và vận hành Backend &amp; Frontend.</p>
+  <div>
+    <span class="badge">Backend: Spring Boot 3.5.0 · Java 17</span>
+    <span class="badge">Frontend: React 18</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <strong>Mục lục</strong>
+  <ul>
+    <li><a href="#req">1. Yêu cầu môi trường</a></li>
+    <li><a href="#struct">2. Cấu trúc dự án</a></li>
+    <li><a href="#env">3. Thiết lập biến môi trường (.env)</a></li>
+    <li><a href="#backend">4. Chạy Backend</a></li>
+    <li><a href="#frontend">5. Chạy Frontend</a></li>
+    <li><a href="#ports">6. Cổng &amp; URL mặc định</a></li>
+    <li><a href="#quick">7. Quy trình chạy nhanh</a></li>
+    <li><a href="#trouble">8. Xử lý sự cố</a></li>
+  </ul>
+</nav>
+
+<p>Hệ thống gồm 2 phần: <strong>Backend</strong> (Spring Boot, thư mục <code>backend/</code>) kết nối MySQL (chính + phụ),
+PostgreSQL (read-only) và Redis; <strong>Frontend</strong> (React SPA, thư mục <code>frontend/</code>) gọi REST API của backend.</p>
+
+<h2 id="req">1. Yêu cầu môi trường</h2>
+<table>
+  <tr><th>Phần mềm</th><th>Phiên bản khuyến nghị</th><th>Ghi chú</th></tr>
+  <tr><td><strong>JDK (Java)</strong></td><td><strong>17</strong></td><td>Bắt buộc Java 17 (<code>pom.xml</code> khai báo <code>java.version=17</code>). Kiểm tra: <code>java -version</code></td></tr>
+  <tr><td><strong>Maven</strong></td><td>3.9+</td><td>Build backend. Kiểm tra: <code>mvn -v</code></td></tr>
+  <tr><td><strong>Node.js</strong></td><td>18 LTS hoặc 20 LTS</td><td>Chạy/build frontend. Kiểm tra: <code>node -v</code></td></tr>
+  <tr><td><strong>npm</strong></td><td>9+ (đi kèm Node)</td><td>Kiểm tra: <code>npm -v</code></td></tr>
+  <tr><td><strong>MySQL</strong></td><td>8.x</td><td>2 database: chính + phụ (DB2)</td></tr>
+  <tr><td><strong>PostgreSQL</strong></td><td>13+</td><td>DB3 (read-only, có thể tắt qua <code>DB3_ENABLED</code>)</td></tr>
+  <tr><td><strong>Redis</strong></td><td>6+</td><td>Dùng cho cache</td></tr>
+</table>
+
+<h2 id="struct">2. Cấu trúc dự án</h2>
+<pre><code>SPM/
+├── backend/                 # Spring Boot
+│   ├── src/main/resources/application.yml
+│   ├── .env                 # biến môi trường THẬT (không commit)
+│   ├── .env.example         # mẫu biến môi trường
+│   └── pom.xml
+├── frontend/                # React
+│   ├── src/
+│   ├── .env                 # biến môi trường THẬT (không commit)
+│   └── .env.example         # mẫu biến môi trường
+├── README.md
+└── docs.html                # tài liệu này</code></pre>
+
+<h2 id="env">3. Thiết lập biến môi trường (.env)</h2>
+<p>Backend và frontend đọc cấu hình từ file <code>.env</code> đặt tại thư mục gốc của từng phần. Cách làm: copy file mẫu rồi điền giá trị thật.</p>
+<pre><code># Backend
+cp backend/.env.example backend/.env
+
+# Frontend
+cp frontend/.env.example frontend/.env</code></pre>
+<div class="note">⚠️ <strong>Không commit</strong> file <code>.env</code> thật lên Git (chứa mật khẩu, token). Chỉ commit <code>.env.example</code>.</div>
+
+<h3>3.1. Backend – <code>backend/.env</code></h3>
+<p>Backend dùng thư viện <code>spring-dotenv</code>, <strong>tự động nạp</strong> file <code>.env</code> cùng thư mục khi khởi động (kể cả khi chạy <code>java -jar</code>). Các biến trong <code>application.yml</code> tham chiếu qua cú pháp <code>${TÊN_BIẾN}</code>.</p>
+<table>
+  <tr><th>Biến</th><th>Ý nghĩa</th></tr>
+  <tr><td><code>SPRING_DATASOURCE_URL</code> / <code>_USERNAME</code> / <code>_PASSWORD</code></td><td>Kết nối MySQL <strong>chính</strong></td></tr>
+  <tr><td><code>SERVER_PORT</code></td><td>Cổng backend (mẫu: <code>8081</code>; mặc định nếu bỏ trống: <code>8080</code>)</td></tr>
+  <tr><td><code>DB2_ENABLED</code>, <code>DB2_URL</code>, <code>DB2_USERNAME</code>, <code>DB2_PASSWORD</code></td><td>MySQL <strong>phụ</strong></td></tr>
+  <tr><td><code>DB3_ENABLED</code>, <code>DB3_URL</code>, <code>DB3_USERNAME</code>, <code>DB3_PASSWORD</code></td><td>PostgreSQL read-only</td></tr>
+  <tr><td><code>JWT_SECRET</code></td><td>Chuỗi bí mật ký JWT (≥ 32 ký tự ngẫu nhiên)</td></tr>
+  <tr><td><code>FILE_UPLOAD_DIR</code></td><td>Thư mục lưu file upload</td></tr>
+  <tr><td><code>BACKEND_LOG_PATH</code>, <code>APP_NAME</code></td><td>Đường dẫn log / tên ứng dụng</td></tr>
+  <tr><td><code>REDIS_HOST</code>, <code>REDIS_PORT</code>, <code>REDIS_PASSWORD</code></td><td>Kết nối Redis</td></tr>
+  <tr><td><code>MAIL_DEFAULT</code>, <code>MAIL_DEFAULT_PASSWORD</code></td><td>Tài khoản gửi mail (SMTP Office365)</td></tr>
+  <tr><td><code>WEB_SOCKET_SERVER</code>, <code>WINDOW_SERVER</code>, <code>HRM_API</code></td><td>Các service nội bộ</td></tr>
+  <tr><td><code>CORS_ALLOWED_ORIGIN_PATTERNS</code></td><td>Origin FE được phép gọi (vd <code>http://localhost:3000</code>)</td></tr>
+</table>
+
+<h3>3.2. Frontend – <code>frontend/.env</code></h3>
+<p>Biến React <strong>bắt buộc bắt đầu bằng <code>REACT_APP_</code></strong> và được nhúng lúc build/start (đổi <code>.env</code> phải khởi động lại <code>npm start</code>).</p>
+<table>
+  <tr><th>Biến</th><th>Ý nghĩa</th></tr>
+  <tr><td><code>REACT_APP_API_URL</code></td><td>URL REST API backend (vd <code>http://localhost:8081/api</code>)</td></tr>
+  <tr><td><code>REACT_APP_UPLOAD_URL</code></td><td>URL thư mục file upload</td></tr>
+  <tr><td><code>REACT_APP_SOCKET_HOST</code></td><td>URL WebSocket server</td></tr>
+  <tr><td><code>REACT_APP_SUPERSET_HOST</code></td><td>Host backend cho báo cáo</td></tr>
+  <tr><td><code>REACT_APP_API_FE</code></td><td>URL chính của frontend</td></tr>
+  <tr><td><code>REACT_APP_FRAPPE_HOST</code>, <code>REACT_APP_NODE_HOST</code>, <code>REACT_APP_FRAPPE_TOKEN</code></td><td>Tích hợp service Frappe/Node</td></tr>
+  <tr><td><code>GENERATE_SOURCEMAP</code></td><td><code>false</code> để build nhẹ hơn</td></tr>
+</table>
+
+<h2 id="backend">4. Chạy Backend</h2>
+<p>Đảm bảo MySQL / PostgreSQL / Redis đang chạy và đã khai báo đúng trong <code>backend/.env</code>.</p>
+
+<h3>4.1. Chế độ phát triển (dev)</h3>
+<pre><code>cd backend
+mvn spring-boot:run</code></pre>
+
+<h3>4.2. Build ra file JAR (production)</h3>
+<pre><code>cd backend
+mvn clean package
+# Bỏ qua test khi build nhanh:
+# mvn clean package -DskipTests</code></pre>
+<p>File JAR tạo ra tại: <code>backend/target/quanlycodien-0.0.1-SNAPSHOT.jar</code></p>
+
+<h3>4.3. Chạy JAR</h3>
+<pre><code>cd backend
+java -jar target/quanlycodien-0.0.1-SNAPSHOT.jar</code></pre>
+<div class="note"><code>spring-dotenv</code> sẽ tự đọc <code>backend/.env</code> nếu bạn chạy lệnh <strong>từ trong thư mục <code>backend</code></strong> (nơi chứa file <code>.env</code>).</div>
+
+<h3>4.4. Chạy như service trên Linux (systemd)</h3>
+<p>Tạo file <code>/etc/systemd/system/spm-backend.service</code>:</p>
+<pre><code>[Unit]
+Description=SPM Backend (HTMP)
+After=network.target mysql.service redis.service
+
+[Service]
+User=htmp
+WorkingDirectory=/opt/spm/backend
+ExecStart=/usr/bin/java -jar /opt/spm/backend/quanlycodien-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<div class="note"><code>WorkingDirectory</code> phải là nơi đặt file <code>.env</code> để <code>spring-dotenv</code> nạp được biến môi trường.</div>
+<p>Kích hoạt và quản lý service:</p>
+<pre><code>sudo systemctl daemon-reload
+sudo systemctl enable spm-backend      # tự chạy khi khởi động máy
+sudo systemctl start spm-backend       # khởi động
+sudo systemctl status spm-backend      # xem trạng thái
+sudo journalctl -u spm-backend -f      # xem log realtime</code></pre>
+<p>Backend mặc định phục vụ tại <strong>http://localhost:8081</strong> (theo <code>SERVER_PORT</code> trong <code>.env.example</code>).</p>
+
+<h2 id="frontend">5. Chạy Frontend</h2>
+<h3>5.1. Cài dependencies (lần đầu / khi đổi package)</h3>
+<pre><code>cd frontend
+npm install</code></pre>
+<h3>5.2. Chế độ phát triển (dev)</h3>
+<pre><code>cd frontend
+npm run start</code></pre>
+<p>Ứng dụng chạy tại <strong>http://localhost:3000</strong> và tự reload khi sửa code.</p>
+<h3>5.3. Build production</h3>
+<pre><code>cd frontend
+npm run build</code></pre>
+<p>Kết quả build tĩnh nằm ở <code>frontend/build/</code>, có thể phục vụ bằng Nginx hoặc web server tĩnh bất kỳ.</p>
+
+<h2 id="ports">6. Cổng &amp; URL mặc định</h2>
+<table>
+  <tr><th>Dịch vụ</th><th>URL</th><th>Cấu hình tại</th></tr>
+  <tr><td>Backend API</td><td>http://localhost:8081</td><td><code>SERVER_PORT</code> (backend .env)</td></tr>
+  <tr><td>Frontend</td><td>http://localhost:3000</td><td>mặc định react-scripts</td></tr>
+  <tr><td>Redis</td><td>localhost:6379</td><td><code>REDIS_PORT</code></td></tr>
+</table>
+<p class="muted">Frontend gọi backend qua <code>REACT_APP_API_URL</code>; đảm bảo giá trị này trỏ đúng cổng backend, và cổng frontend nằm trong <code>CORS_ALLOWED_ORIGIN_PATTERNS</code> của backend.</p>
+
+<h2 id="quick">7. Quy trình chạy nhanh (tóm tắt)</h2>
+<pre><code># 1. Cấu hình biến môi trường
+cp backend/.env.example  backend/.env    &amp;&amp; $EDITOR backend/.env
+cp frontend/.env.example frontend/.env   &amp;&amp; $EDITOR frontend/.env
+
+# 2. Backend
+cd backend
+mvn clean package
+java -jar target/quanlycodien-0.0.1-SNAPSHOT.jar
+# (đảm bảo MySQL/PostgreSQL/Redis đã chạy)
+
+# 3. Frontend (terminal khác)
+cd frontend
+npm install
+npm run start</code></pre>
+
+<h2 id="trouble">8. Xử lý sự cố thường gặp</h2>
+<table>
+  <tr><th>Triệu chứng</th><th>Nguyên nhân / cách xử lý</th></tr>
+  <tr><td>Backend báo lỗi kết nối DB khi khởi động</td><td>Sai <code>SPRING_DATASOURCE_*</code> hoặc DB chưa chạy. Kiểm tra <code>.env</code> và service MySQL.</td></tr>
+  <tr><td>Biến <code>.env</code> không được nạp khi chạy JAR</td><td>Chạy <code>java -jar</code> <strong>từ đúng thư mục chứa <code>.env</code></strong> (hoặc set <code>WorkingDirectory</code> trong systemd).</td></tr>
+  <tr><td>Frontend gọi API bị lỗi CORS</td><td>Thêm origin của FE vào <code>CORS_ALLOWED_ORIGIN_PATTERNS</code> ở backend <code>.env</code>.</td></tr>
+  <tr><td>Sửa <code>.env</code> frontend không có tác dụng</td><td>Biến <code>REACT_APP_*</code> chỉ nạp lúc start/build → <strong>khởi động lại</strong> <code>npm run start</code>.</td></tr>
+  <tr><td><code>mvn</code> báo sai phiên bản Java</td><td>Đảm bảo <code>JAVA_HOME</code> trỏ tới JDK 17.</td></tr>
+</table>
+
+</div>
+</body>
+</html>
